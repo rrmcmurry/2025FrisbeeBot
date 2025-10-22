@@ -41,6 +41,9 @@ public class FrisbeeLauncher extends SubsystemBase {
             Commands.waitSeconds(2.0),
             Commands.runOnce(() -> FrisbeeLoadingMotor.set(1)),
             Commands.waitSeconds(2.0)
-        ).finallyDo(() -> {FrisbeeLaunchMotor.stopMotor(); FrisbeeLoadingMotor.stopMotor();});
+        ).finallyDo(() -> {
+            FrisbeeLaunchMotor.stopMotor(); 
+            FrisbeeLoadingMotor.stopMotor();
+        });
     }
 }
