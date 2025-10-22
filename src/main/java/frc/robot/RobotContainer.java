@@ -7,9 +7,7 @@ package frc.robot;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.FrisbeeLauncher;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class RobotContainer {
@@ -20,7 +18,6 @@ public class RobotContainer {
 
  
   public RobotContainer() {
- 
     configureBindings();
     CommandScheduler.getInstance().setDefaultCommand(drive, drive.driveCommand(controller, false));
   }
@@ -30,7 +27,5 @@ public class RobotContainer {
     new Trigger(() -> controller.getAButton()).whileTrue(frisbeelauncher.fire());
   }
 
-  public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
-  }
+  public void thisdoesnothing() {}
 }
