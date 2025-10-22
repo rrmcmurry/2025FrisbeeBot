@@ -24,7 +24,6 @@ public class FrisbeeLauncher extends SubsystemBase {
         DefaultConfig.smartCurrentLimit(50);
         DefaultConfig.idleMode(IdleMode.kCoast);
         DefaultConfig.openLoopRampRate(2.0);
-        DefaultConfig.closedLoopRampRate(0.0);
         DefaultConfig.inverted(true);
     }
 
@@ -38,11 +37,11 @@ public class FrisbeeLauncher extends SubsystemBase {
     public Command fire() {
         return Commands.sequence(
             Commands.runOnce(() -> FrisbeeLaunchMotor.set(1)),
-            Commands.waitSeconds(2.0),
+            Commands.waitSeconds(3.0),
             Commands.runOnce(() -> FrisbeeLoadingMotor.set(1)),
             Commands.waitSeconds(2.0)
         ).finallyDo(() -> {
-            FrisbeeLaunchMotor.stopMotor(); 
+            FrisbeeLaunchMotor.stopMotor();
             FrisbeeLoadingMotor.stopMotor();
         });
     }
