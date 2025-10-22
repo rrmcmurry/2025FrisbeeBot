@@ -28,4 +28,7 @@ public class RobotContainer {
   }
 
   public void thisdoesnothing() {}
+
+  // Need to define game states and track them
+  // States = {Idle -> Navigate -> Target -> Fire -> Locate -> Pickup -> Manual}
 }
