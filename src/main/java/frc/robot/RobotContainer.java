@@ -24,7 +24,7 @@ public class RobotContainer {
 
 
   private void configureBindings() {
-    new Trigger(() -> controller.getAButton()).whileTrue(frisbeelauncher.fire());
+    new Trigger(() -> controller.getAButton()).onTrue(frisbeelauncher.fire());
   }
 
   public void thisdoesnothing() {}
