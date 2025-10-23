@@ -18,8 +18,8 @@ public class FrisbeeLauncher extends SubsystemBase {
     public static SparkMaxConfig DefaultConfig = new SparkMaxConfig();    
     private SparkMax FrisbeeLaunchMotor;    
     private SparkMax FrisbeeLoadingMotor;
-    public static final int kFrisbeeLaunchMotorCanID = 9;
-    public static final int kFrisbeeLoadingMotorCanID = 10;
+    public static final int kFrisbeeLaunchMotorCanID = 10;
+    public static final int kFrisbeeLoadingMotorCanID = 9;
     private SparkAbsoluteEncoder flywheelencoder;
 
     static {
@@ -40,10 +40,10 @@ public class FrisbeeLauncher extends SubsystemBase {
     public Command fire() {
         return Commands.sequence(
             Commands.runOnce(() -> FrisbeeLaunchMotor.set(1)), // Set Frisbee launch motor to full speed
-            Commands.waitUntil(() -> flywheelencoder.getVelocity() > 5000), // Wait until we're at 5000 RPM
-            Commands.waitSeconds(0.5), // Wait another half a second
+            // Commands.waitUntil(() -> flywheelencoder.getVelocity() > 100), // Wait until we're at 5000 RPM
+            Commands.waitSeconds(1.0), // Wait another half a second
             Commands.runOnce(() -> FrisbeeLoadingMotor.set(1)), // Load the frisbee
-            Commands.waitSeconds(2.0) // Fire 
+            Commands.waitSeconds(1.0) // Fire 
         ).finallyDo(() -> {
             FrisbeeLaunchMotor.stopMotor(); // let the motors coast
             FrisbeeLoadingMotor.stopMotor();
