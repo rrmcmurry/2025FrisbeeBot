@@ -11,7 +11,7 @@ public class VisionSubsystem extends SubsystemBase {
         camera = new PhotonCamera("FrontLeftCamera");
     }
 
-    public void robotInit() {
-        camera.getLatestResult(); // warm-up
+    public void robotInit() {        
+        camera.getAllUnreadResults(); // warm-up
     }
 }
