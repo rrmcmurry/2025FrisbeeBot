@@ -4,8 +4,7 @@
 
 package frc.robot;
 
-import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.FrisbeeLauncher;
+import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -15,6 +14,7 @@ public class RobotContainer {
   private final DriveSubsystem drive = new DriveSubsystem();
   private final XboxController controller = new XboxController(0);
   private final FrisbeeLauncher frisbeelauncher = new FrisbeeLauncher();
+  private final VisionSubsystem vision = new VisionSubsystem();
 
  
   public RobotContainer() {
