@@ -20,7 +20,7 @@ public class FrisbeeLauncher extends SubsystemBase {
     public static final int kFrisbeeLaunchMotorCanID = 10;
     public static final int kFrisbeeLoadingMotorCanID = 9;
     
-    public boolean loaded;
+    private boolean loaded;
 
     static {
         DefaultConfig.smartCurrentLimit(50);
@@ -35,25 +35,30 @@ public class FrisbeeLauncher extends SubsystemBase {
         FrisbeeLaunchMotor.configure(DefaultConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         FrisbeeLoadingMotor.configure(DefaultConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);        
         
-        loaded = true;
+        loaded = false;
     }
 
     public Command reload() {
-        return Commands.runOnce(() -> loaded = true);
+        return Commands.runOnce(() -> this.loaded = true);
     }
 
     public Command fire() {
-        if (!loaded) return Commands.none();
-        
-        return Commands.sequence(
-            Commands.runOnce(() -> FrisbeeLaunchMotor.set(1)), // Set Frisbee launch motor to full speed            
-            Commands.waitSeconds(1.0), // Wait another half a second
-            Commands.runOnce(() -> FrisbeeLoadingMotor.set(1)), // Load the frisbee
-            Commands.runOnce(() -> loaded = false),
-            Commands.waitSeconds(1.0) // Fire 
-        ).finallyDo(() -> {
-            FrisbeeLaunchMotor.stopMotor(); // let the motors coast
-            FrisbeeLoadingMotor.stopMotor();
-        });
+        Command thiscommand;
+        if (loaded == false) {
+            thiscommand = Commands.none();
+        }
+        else {
+            thiscommand = Commands.sequence(
+                Commands.runOnce(() -> FrisbeeLaunchMotor.set(1)), // Set Frisbee launch motor to full speed            
+                Commands.waitSeconds(1.0), // Wait another half a second
+                Commands.runOnce(() -> FrisbeeLoadingMotor.set(1)), // Load the frisbee
+                Commands.runOnce(() -> this.loaded = false),
+                Commands.waitSeconds(1.0) // Fire 
+            ).finallyDo(() -> {
+                FrisbeeLaunchMotor.stopMotor(); // let the motors coast
+                FrisbeeLoadingMotor.stopMotor();
+            });
+        }
+        return thiscommand;
     }
 }

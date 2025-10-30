@@ -26,14 +26,13 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public Command reset() {
-        return Commands.runOnce(() -> aligned = false);
+        aligned = false;
+        return Commands.none();
     }
 
     @Override
     public void periodic() {
         UpdateVision();
-        aligned = Math.abs(targetYaw) < deadband;
-
     }
 
 
@@ -53,6 +52,7 @@ public class VisionSubsystem extends SubsystemBase {
                         targetYaw = target.getYaw();
                         targetArea = target.getArea();
                         targetPitch = target.getPitch();
+                        aligned = Math.abs(targetYaw) < deadband;
                     }
                 }
             }
