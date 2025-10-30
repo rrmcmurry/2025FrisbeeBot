@@ -12,15 +12,34 @@ public class VisionSubsystem extends SubsystemBase {
     double targetYaw;
     double targetArea;
     double targetPitch;
-    public boolean aligned;
+    boolean aligned;
+    double deadband = 2.0;
 
     public VisionSubsystem() {
         camera = new PhotonCamera("FrontLeftCamera");
+        aligned = false;
     }
+
+
+    public boolean isAligned() {
+        return aligned;
+    }
+
+    public Command reset() {
+        return Commands.runOnce(() -> aligned = false);
+    }
+
+    @Override
+    public void periodic() {
+        UpdateVision();
+        aligned = Math.abs(targetYaw) < deadband;
+
+    }
+
 
     public void UpdateVision() {
         targetVisible = false;
-        targetYaw = 0.0;
+        targetYaw = 360.0;
         targetArea = 0.0;
         targetPitch = 0.0;
 
@@ -41,23 +60,15 @@ public class VisionSubsystem extends SubsystemBase {
     }
 
     public double CalculateDriveRotation() {
-        UpdateVision();
-        aligned=false;
-        if (!targetVisible) return 0;
-        
-        // Normalize yaw: -180 to +180
-        double yaw = ((targetYaw + 180) % 360) - 180; 
 
+        if (!targetVisible || aligned) return 0;
+        
         // Clamp yaw and convert to rotation (power) 
-        double maxYaw = 75.0;
+        double maxYaw = 30.0;
         double maxPower = 0.25;
-        double clampedYaw = Math.max(-maxYaw, Math.min(maxYaw, yaw));
-        double rotation = (clampedYaw / maxYaw) * maxPower;
-        double deadband = 2.0;
-        if (Math.abs(yaw) < deadband) {
-            aligned = true;
-            rotation = 0;
-        }
+        double clampedYaw = Math.max(-maxYaw, Math.min(maxYaw, targetYaw));
+        double rotation = (clampedYaw / maxYaw) * maxPower;        
+
         return rotation;
     }
 

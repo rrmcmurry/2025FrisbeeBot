@@ -8,6 +8,7 @@ import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 public class RobotContainer {
   
@@ -24,9 +25,9 @@ public class RobotContainer {
 
 
   private void configureBindings() {
-    new Trigger(() -> controller.getAButton()).onTrue(frisbeelauncher.reload());
+    new Trigger(() -> controller.getAButton()).onTrue(Commands.sequence(frisbeelauncher.reload(),vision.reset()));
     new Trigger(() -> controller.getXButton()).whileTrue(vision.align(drive));
-    new Trigger(() -> vision.aligned).onTrue(frisbeelauncher.fire());
+    new Trigger(vision::isAligned).onTrue(frisbeelauncher.fire());
   }
 
   public void thisdoesnothing() {}
