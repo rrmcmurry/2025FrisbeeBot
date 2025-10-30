@@ -21,6 +21,7 @@ public class FrisbeeLauncher extends SubsystemBase {
     public static final int kFrisbeeLaunchMotorCanID = 10;
     public static final int kFrisbeeLoadingMotorCanID = 9;
     private SparkAbsoluteEncoder flywheelencoder;
+    public boolean loaded;
 
     static {
         DefaultConfig.smartCurrentLimit(50);
@@ -35,14 +36,22 @@ public class FrisbeeLauncher extends SubsystemBase {
         FrisbeeLaunchMotor.configure(DefaultConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         FrisbeeLoadingMotor.configure(DefaultConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);        
         flywheelencoder = FrisbeeLaunchMotor.getAbsoluteEncoder();
+        loaded = true;
+    }
+
+    public Command reload() {
+        return Commands.runOnce(() -> loaded = true);
     }
 
     public Command fire() {
+        if (!loaded) return Commands.none();
+        
         return Commands.sequence(
             Commands.runOnce(() -> FrisbeeLaunchMotor.set(1)), // Set Frisbee launch motor to full speed
             // Commands.waitUntil(() -> flywheelencoder.getVelocity() > 100), // Wait until we're at 5000 RPM
             Commands.waitSeconds(1.0), // Wait another half a second
             Commands.runOnce(() -> FrisbeeLoadingMotor.set(1)), // Load the frisbee
+            Commands.runOnce(() -> loaded = false),
             Commands.waitSeconds(1.0) // Fire 
         ).finallyDo(() -> {
             FrisbeeLaunchMotor.stopMotor(); // let the motors coast

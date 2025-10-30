@@ -24,7 +24,9 @@ public class RobotContainer {
 
 
   private void configureBindings() {
-    new Trigger(() -> controller.getAButton()).onTrue(frisbeelauncher.fire());
+    new Trigger(() -> controller.getAButton()).onTrue(frisbeelauncher.reload());
+    new Trigger(() -> controller.getXButton()).whileTrue(vision.align(drive));
+    new Trigger(() -> vision.aligned).onTrue(frisbeelauncher.fire());
   }
 
   public void thisdoesnothing() {}
